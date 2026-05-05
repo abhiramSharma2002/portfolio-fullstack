@@ -39,10 +39,16 @@ const Navbar = () => {
   }, [menuOpen])
 
   const handleLogout = async () => {
-    await logout()
-    setMenuOpen(false)
-    navigate('/')
-  }
+  await logout()
+  setMenuOpen(false)
+  navigate('/', { replace: true })
+}
+
+  // const handleLogout = async () => {
+  //   await logout()
+  //   setMenuOpen(false)
+  //   navigate('/')
+  // }
 
   return (
     <>

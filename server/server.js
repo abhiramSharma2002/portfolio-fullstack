@@ -33,19 +33,19 @@ app.use(globalLimiter)
 // ─────────────────────────────────────────────
 const allowedOrigins = [
   'http://localhost:5173',
-  process.env.CLIENT_URL,
+  'https://portfolio-fullstack-three-umber.vercel.app',
 ]
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (Postman, mobile apps)
       if (!origin) return callback(null, true)
 
       if (allowedOrigins.includes(origin)) {
-        callback(null, true)
+        return callback(null, true)
       } else {
-        callback(new Error('Not allowed by CORS'))
+        console.log('Blocked CORS origin:', origin)
+        return callback(null, false)
       }
     },
     credentials: true,
