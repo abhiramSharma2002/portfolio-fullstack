@@ -39,7 +39,7 @@ A Full Stack Developer focused on building scalable web applications and clean U
 - 📩 Contact Form (Nodemailer)
 - 📊 MongoDB Atlas Integration
 - 🎨 Modern UI + Animations
-- 📄 Resume Download
+
 
 ---
 
