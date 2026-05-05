@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000/api/v1', //  FIXED
+  baseURL: import.meta.env.VITE_API_URL, // ✅ FIXED
   withCredentials: true,
   timeout: 10000,
   headers: {
@@ -52,20 +52,9 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    // 🚫 403
-    if (status === 403) {
-      console.warn('Access denied')
-    }
-
-    // 🐢 429
-    if (status === 429) {
-      console.warn('Too many requests — slow down!')
-    }
-
-    // 💥 500
-    if (status >= 500) {
-      console.error('Server error occurred')
-    }
+    if (status === 403) console.warn('Access denied')
+    if (status === 429) console.warn('Too many requests — slow down!')
+    if (status >= 500) console.error('Server error occurred')
 
     return Promise.reject(error)
   }
