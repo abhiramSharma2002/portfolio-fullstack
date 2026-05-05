@@ -41,14 +41,16 @@ const projects = [
   featured: true,
 },
   {
-    title:    'Portfolio Website',
-    icon:     '🚀',
-    desc:     'This very portfolio — built with MERN stack. Features JWT auth, protected routes, React Query caching, Framer Motion animations and a Node.js REST API backend.',
-    tech:     ['React', 'Node.js', 'MongoDB', 'Framer Motion', 'React Query'],
-    github:   'https://github.com/abhiramsharma/portfolio', // apna sahi link lagao
-    live:     null,
-    featured: false,
-  },
+  title: 'Portfolio Website',
+  icon: '🚀',
+  desc: 'A full-stack developer portfolio showcasing projects, authentication system, protected routes, and modern UI. Built with React, Node.js, MongoDB, and deployed with Vercel + Render.',
+  tech: ['React', 'Node.js', 'MongoDB', 'Express', 'Framer Motion'],
+
+  github: 'https://github.com/abhiramSharma2002/portfolio-fullstack',
+  live: 'https://portfolio-fullstack-three-umber.vercel.app',
+
+  featured: true,
+}
 ]
 
 const ProjectCard = ({ project, index }) => {
