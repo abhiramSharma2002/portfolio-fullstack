@@ -10,55 +10,89 @@ const errorHandler = require('./middleware/errorHandler')
 const { globalLimiter } = require('./middleware/rateLimiter')
 const v1Routes = require('./routes/v1/index')
 
-// Load env FIRST (best practice)
+// ── Load ENV FIRST ──
 dotenv.config()
 
-// DB connect
+// ── Connect DB ──
 connectDB()
 
 const app = express()
 
-// ── Security headers ──
+// ─────────────────────────────────────────────
+// 🛡️ Security Headers
+// ─────────────────────────────────────────────
 app.use(helmet())
 
-// ── Rate limiting ──
+// ─────────────────────────────────────────────
+// 🚦 Rate Limiting
+// ─────────────────────────────────────────────
 app.use(globalLimiter)
 
-// ── CORS ──
+// ─────────────────────────────────────────────
+// 🌐 CORS (PRODUCTION READY)
+// ─────────────────────────────────────────────
+const allowedOrigins = [
+  'http://localhost:5173',
+  process.env.CLIENT_URL,
+]
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: function (origin, callback) {
+      // Allow requests with no origin (Postman, mobile apps)
+      if (!origin) return callback(null, true)
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     credentials: true,
   })
 )
 
-// ── Body parsers ──
+// ─────────────────────────────────────────────
+// 📦 Body Parsers
+// ─────────────────────────────────────────────
 app.use(express.json({ limit: '10kb' }))
 app.use(express.urlencoded({ extended: true }))
 
-// ── Logs ──
+// ─────────────────────────────────────────────
+// 🧾 Logger
+// ─────────────────────────────────────────────
 app.use(morgan('dev'))
 
-// ── Cookies ──
+// ─────────────────────────────────────────────
+// 🍪 Cookies
+// ─────────────────────────────────────────────
 app.use(cookieParser())
 
-// ── Routes ──
+// ─────────────────────────────────────────────
+// 🚀 Routes
+// ─────────────────────────────────────────────
 app.use('/api/v1', v1Routes)
 
-// ── Health check ──
+// ─────────────────────────────────────────────
+// ❤️ Health Check
+// ─────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'API Running ',
+    message: 'API Running 🚀',
   })
 })
 
-// ── Error handler (must be last) ──
+// ─────────────────────────────────────────────
+// ❌ Error Handler (LAST)
+// ─────────────────────────────────────────────
 app.use(errorHandler)
 
-// ── Start server ──
+// ─────────────────────────────────────────────
+// 🔥 Server Start
+// ─────────────────────────────────────────────
 const PORT = process.env.PORT || 5000
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
-});
+})

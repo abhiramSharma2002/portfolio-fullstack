@@ -3,8 +3,9 @@ const User = require('../models/User')
 const logger = require('../utils/logger')
 const asyncHandler = require('../middleware/asyncHandler')
 
-
-// Token helper
+// ─────────────────────────────────────────────
+// 🔑 Token Helper
+// ─────────────────────────────────────────────
 const sendTokenResponse = (user, statusCode, res) => {
   const token = jwt.sign(
     { id: user._id, role: user.role },
@@ -19,8 +20,11 @@ const sendTokenResponse = (user, statusCode, res) => {
         Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
       ),
       httpOnly: true,
+
+      // 🔥 IMPORTANT FOR PRODUCTION
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite:
+        process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
     })
     .json({
       success: true,
@@ -34,8 +38,9 @@ const sendTokenResponse = (user, statusCode, res) => {
     })
 }
 
-
-// ── REGISTER ──
+// ─────────────────────────────────────────────
+// 📝 REGISTER
+// ─────────────────────────────────────────────
 const register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body
 
@@ -62,8 +67,9 @@ const register = asyncHandler(async (req, res) => {
   sendTokenResponse(user, 201, res)
 })
 
-
-// ── LOGIN ──
+// ─────────────────────────────────────────────
+// 🔐 LOGIN
+// ─────────────────────────────────────────────
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body
 
@@ -97,12 +103,18 @@ const login = asyncHandler(async (req, res) => {
   sendTokenResponse(user, 200, res)
 })
 
-
-// ── LOGOUT ──
+// ─────────────────────────────────────────────
+// 🚪 LOGOUT
+// ─────────────────────────────────────────────
 const logout = asyncHandler(async (req, res) => {
   res.cookie('token', '', {
     expires: new Date(0),
     httpOnly: true,
+
+    // 🔥 same config as login (important)
+    secure: process.env.NODE_ENV === 'production',
+    sameSite:
+      process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
   })
 
   res.status(200).json({
@@ -111,8 +123,9 @@ const logout = asyncHandler(async (req, res) => {
   })
 })
 
-
-// ── GET ME ──
+// ─────────────────────────────────────────────
+// 👤 GET ME
+// ─────────────────────────────────────────────
 const getMe = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
